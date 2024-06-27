@@ -1,0 +1,83 @@
+import pandas as pd
+from sklearn.datasets import load_iris
+
+# Load iris dataset
+X, y = load_iris(return_X_y=True, as_frame=True)
+
+# Feature names
+feature_names = X.columns
+print("Feature names:", feature_names)
+
+# Map class labels to class names
+class_names = {0: 'setosa', 1: 'versicolor', 2: 'virginica'}
+y = y.map(class_names)
+
+# Handle missing values
+for column in X.columns:
+        if X[column].dtype == 'object':
+            mode_val = X[column].mode()[0]
+            X[column].fillna(mode_val, inplace=True)
+        else:
+            mean_val = X[column].mean()
+            X[column].fillna(mean_val, inplace=True)
+
+#task 1
+
+#1
+average_petal_length_of_dataset = X['petal length (cm)'].mean()
+print("The average petal length in the whole dataset is:", average_petal_length_of_dataset)
+
+#2
+versicolor_data = X[y == 'versicolor']
+average_petal_width_versicolor = versicolor_data['petal width (cm)'].mean()
+print("The average petal width for the versicolor subclass is:", average_petal_width_versicolor)
+
+#3
+median_sepal_length = X['sepal length (cm)'].median()
+print("The median sepal length in the whole dataset is:", median_sepal_length)
+
+#4
+virginica_data = X[y == 'virginica']
+median_sepal_width_virginica = virginica_data['sepal width (cm)'].median()
+print("The median sepal width for the virginica subclass is:", median_sepal_width_virginica)
+
+#5
+num_samples = len(X)
+print("Number of rows:", num_samples)
+
+#6
+setosa_rows = (y == 'setosa').sum()
+print("Number of rows in the setosa subclass:", setosa_rows)
+
+#7
+pearson_corr_sepal_length_width = X['sepal length (cm)'].corr(X['sepal width (cm)'])
+print("Pearson correlation coefficient between sepal length and sepal width:", pearson_corr_sepal_length_width)
+
+#8
+versicolor_subset = X[y == 'versicolor']
+pearson_corr_petal_length_width_versicolor = versicolor_subset['petal length (cm)'].corr(versicolor_subset['petal width (cm)'])
+print("Pearson correlation coefficient between petal length and petal width for versicolor subclass:", pearson_corr_petal_length_width_versicolor)
+
+#task 2
+
+df = pd.concat([X, y], axis=1)
+colors = {'setosa': 'red', 'versicolor': 'green', 'virginica': 'blue'}
+df['color'] = df[y.name].map(colors)
+df.plot.scatter(x='petal length (cm)', y='petal width (cm)', c='color', title='Scatter Plot of Petal Length vs Petal Width')
+/*
+Task 1:
+
+The average petal length in the whole dataset is: 3.7580000000000005
+The average petal width for the versicolor subclass is: 1.3259999999999998
+The median sepal length in the whole dataset is: 5.8
+The median sepal width for the virginica subclass is: 3.0
+Number of rows: 150
+Number of rows in the setosa subclass: 50
+Pearson correlation coefficient between sepal length and sepal width: -0.11756978413300208
+Pearson correlation coefficient between petal length and petal width for versicolor subclass: 0.7866680885228169
+
+Task 3:
+
+with the help of the graph it is possible to notice that there is a dependence between the type of flowers and their size,
+i.e. the smallest is setosa, then the next largest is versicolor and the largest is virginica. Also the length and width of each flower species are quite equally proportional
+*/
