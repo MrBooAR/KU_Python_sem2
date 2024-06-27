@@ -1,0 +1,74 @@
+//exercise 1
+// 1st part
+import random as r
+import pandas as pd
+
+# Generate data for Log-Normal distribution
+ln_data = [r.lognormvariate(0, 1) for _ in range(10001)]
+ln_series = pd.Series(ln_data)
+
+# Calculate statistics for Log-Normal distribution
+ln_statistics = ln_series.describe()
+ln_q1 = ln_statistics['25%']
+ln_q2 = ln_statistics['50%']
+ln_q3 = ln_statistics['75%']
+ln_min = ln_statistics['min']
+ln_max = ln_statistics['max']
+ln_iqr = ln_q3 - ln_q1
+ln_std = ln_series.std()
+ln_mean = ln_series.std()
+
+print("Log-Normal Distribution Statistics:")
+print("Q1:", ln_q1)
+print("Q2:", ln_q2)
+print("Q3:", ln_q3)
+print("Min:", ln_min)
+print("Max:", ln_max)
+print("IQR:", ln_iqr)
+print("Mean:", ln_mean)
+print("Standard Deviation:", ln_std)
+
+low_outliers = ln_series[ln_series < ln_statistics['25%'] - 1.5 * ln_iqr]
+high_outliers = ln_series[ln_series > ln_statistics['75%'] + 1.5 * ln_iqr]
+
+print("Number of total outliers:", len(low_outliers) + len(high_outliers))
+
+# plots for Log-Normal distribution
+ln_series.plot.box()
+ln_series.plot.hist()
+  
+//2st part
+
+# Generate data for Weibull distribution
+weibull_data = [r.weibullvariate(1, 1.5) for _ in range(10001)]
+weibull_series = pd.Series(weibull_data)
+
+# Calculate statistics for Weibull distribution
+weibull_statistics = weibull_series.describe()
+weibull_q1 = weibull_statistics['25%']
+weibull_q2 = weibull_statistics['50%']
+weibull_q3 = weibull_statistics['75%']
+weibull_min = weibull_statistics['min']
+weibull_max = weibull_statistics['max']
+weibull_iqr = weibull_q3 - weibull_q1
+weibull_mean = weibull_series.mean()
+weibull_std = weibull_series.std()
+
+print("Weibull Distribution Statistics:")
+print("Q1:", weibull_q1)
+print("Q2:", weibull_q2)
+print("Q3:", weibull_q3)
+print("Min:", weibull_min)
+print("Max:", weibull_max)
+print("IQR:", weibull_iqr)
+print("Mean:", weibull_mean)
+print("Standard Deviation:", weibull_std)
+
+low_outliers = weibull_series[weibull_series < weibull_statistics['25%'] - 1.5 * weibull_iqr]
+high_outliers = weibull_series[weibull_series > weibull_statistics['75%'] + 1.5 * weibull_iqr]
+
+print("Number of total outliers:", len(low_outliers) + len(high_outliers))
+
+# Box plot for Weibull distribution
+weibull_series.plot.box()
+weibull_series.plot.hist()  
