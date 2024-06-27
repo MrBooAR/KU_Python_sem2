@@ -1,0 +1,30 @@
+import pandas as pd
+# change names of variables in the method for better and easier understanding the code
+def update_database(day, num_people, database):
+  # check for the existence of the day in the database
+    if day not in database:
+        # сreate a new series if the day doesnt exist in the database
+        database[day] = pd.Series([num_people])
+    else:
+        # concatenate the existing series with a new one containing the new value instead of appending because pandas doesnt have this method in the version in the colab
+        database[day] = pd.concat([database[day], pd.Series([num_people])], ignore_index=True)
+        # it ensures that the index of the concatenated series is reset so that it starts from 0, which is important when calculating the average later on
+
+    # calculate the new average for the updated series, using the function mean instead of calculating it manually
+    new_average = database[day].mean()
+    # update the series with the new average
+    database[day + '_average'] = new_average
+
+    return database
+
+# initial database
+database = {'mondays': pd.Series([20, 10]), 'tuesdays': pd.Series([5, 10])}
+
+# update the database with new values
+database = update_database('mondays', 25, database)
+database = update_database('tuesdays', 30, database)
+database = update_database('tuesdays', 5, database)
+database = update_database('wednesdays', 2, database)
+
+# print results after updating
+print(database)
