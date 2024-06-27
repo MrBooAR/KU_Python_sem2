@@ -1,0 +1,40 @@
+
+def is_strong_password(password):
+    # Check if the password meets the criteria for being strong
+    has_lower = any(char.islower() for char in password)
+    has_upper = any(char.isupper() for char in password)
+    if len(password) >= 8:
+        is_long_enough = True
+    else:
+        is_long_enough = False
+    has_numeric = any(char.isdigit() for char in password)
+
+    # Check if all criteria are met
+    if has_lower and has_upper and is_long_enough and has_numeric:
+        return True, []  # Return an empty list of suggestions when the password is strong
+    else:
+        suggestions = []
+        # Suggest improvements based on which criteria are not met
+        if not has_lower:
+            suggestions.append("Add at least one lowercase character.")
+        if not has_upper:
+            suggestions.append("Add at least one uppercase character.")
+        if not is_long_enough:
+            suggestions.append("Password should be at least 8 characters long.")
+        if not has_numeric:
+            suggestions.append("Add at least one numeric character.")
+        return False, suggestions
+
+# User input for password
+password = input("Enter your password: ")
+
+# Check if the password is strong
+is_strong, suggestions = is_strong_password(password)
+
+# Output suggestions
+if is_strong:
+    print("Congratulations! Your password is strong.")
+else:
+    print("Your password could be stronger. Suggestions:")
+    for suggestion in suggestions:
+        print("-", suggestion)
