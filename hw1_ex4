@@ -1,0 +1,48 @@
+import pandas as pd
+import requests
+
+# Define a DataFrame with 10 chosen cities and their corresponding city IDs
+cities_df = pd.DataFrame({
+    'City': ['Warsaw', 'Lisbon', 'Minsk', 'Amsterdam', 'Paris', 'London', 'Almaty', 'Kiev', 'Prague', 'New York'],
+    'City_ID': [756135, 2267057, 625144, 2759794, 2988507, 2643743, 1526273, 703448, 3067696, 5128581]
+})
+
+
+def get_temperature(city_name, api_key):
+    # Convert city_name to lowercase for case-insensitive comparison
+    city_name = city_name.lower()
+    # Find the city ID corresponding to the input city_name
+    city_id = cities_df.loc[cities_df['City'].str.lower() == city_name, 'City_ID'].values
+    if len(city_id) > 0:
+        # Construct the API request URL
+        url = f'http://api.openweathermap.org/data/2.5/weather?id={city_id[0]}&appid={api_key}&units=metric'
+        # Send a GET request to the OpenWeather API
+        response = requests.get(url)
+        # Parse the JSON response
+        weather_data = response.json()
+        if 'main' in weather_data:
+            # Extract the temperature from the weather data
+            temperature = weather_data['main']['temp']
+            return temperature
+        else:
+            print("Error: Unable to retrieve temperature data from the API response.")
+            return None
+    else:
+        print(f"Error: City '{city_name}' not found in the database.")
+        return None
+
+# Main function to allow the user to ask about different cities
+def main(api_key):
+    while True:
+        city_name = input("Enter a city name (or 'quit' to exit): ")
+        if city_name.lower() == 'quit':
+            print("Goodbye!")
+            break
+        else:
+            temperature = get_temperature(city_name, api_key)
+            if temperature is not None:
+                print(f"The temperature in {city_name} is {temperature}°C.")
+
+# Get the OpenWeather API key from the user
+api_key = input("Enter your OpenWeather API key: ")
+main(api_key)
