@@ -1,0 +1,39 @@
+/*
+Explanation of Decision Tree Algorithm of Prediction: 
+
+So the algorithm starts with an question at the top called as the root of the tree. After based on the answer, the data is split into two groups. 
+Each group then gets their own question to further divide it. Then this process continues, making more branches with each question.
+The goal is to make the groups more similar to each other and eventually, the questions lead to end points called leaves. Each leaf represents a final prediction. 
+
+Pluses of using this algorithm: 
+Easy to understand because the process is like a simple tree that human can visualise and draw to understand. 
+Handles different data, so it can work with numerical values and categorical values. 
+
+Minuses of it: 
+Overfitting: Decision trees can become too complicated and this makes them perform well on training data but poorly on new, making them unreliable for real-world use. 
+Instability: Small changes in the training data can result in very different tree structures. This makes decision trees unpredictable and inconsistent, which can be a problem when you need reliable results.
+*/
+
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.datasets import load_iris
+
+X, y = load_iris(return_X_y=True, as_frame=True)
+
+class_names = {0: 'setosa', 1: 'versicolor', 2: 'virginica'}
+y_labels = y.map(class_names)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y_labels, test_size=0.3, random_state=30, stratify=y_labels)
+
+model = DecisionTreeClassifier(random_state=30)
+model.fit(X_train, y_train)
+
+y_train_pred = model.predict(X_train)
+y_test_pred = model.predict(X_test)
+
+train_accuracy = accuracy_score(y_train, y_train_pred)
+test_accuracy = accuracy_score(y_test, y_test_pred)
+
+print("Accuracy on training set:", train_accuracy)
+print("Accuracy on testing set:", test_accuracy)
